@@ -491,6 +491,46 @@ class PerformanceMonitor:
         self.metrics.total_content_size += content_size
 
 
+def timing_decorator(log_level: str = 'debug', logger_name: Optional[str] = None):
+    """
+    Simple decorator for timing function execution
+    
+    Args:
+        log_level: Logging level to use ('debug', 'info', 'warning', 'error')
+        logger_name: Name of logger to use (defaults to module logger)
+    
+    Returns:
+        Decorated function
+    """
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            # Set up logging
+            if logger_name:
+                log = logging.getLogger(logger_name)
+            else:
+                log = logger
+                
+            # Get logging function based on level
+            log_fn = getattr(log, log_level.lower())
+            
+            # Start timing
+            start_time = time.time()
+            
+            # Execute function
+            result = func(*args, **kwargs)
+            
+            # Calculate duration
+            duration = time.time() - start_time
+            
+            # Log the timing
+            log_fn(f"{func.__name__} executed in {duration:.4f} seconds")
+            
+            return result
+        return wrapper
+    return decorator
+
+
 def profile_function(operation_name: Optional[str] = None):
     """
     Decorator for profiling function performance
