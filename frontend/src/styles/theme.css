@@ -1,0 +1,282 @@
+/* src/styles/theme.css */
+:root {
+    /* Base colors */
+    --color-primary: #3b82f6; /* Blue */
+    --color-primary-dark: #2563eb;
+    --color-primary-light: #60a5fa;
+    --color-secondary: #f59e0b; /* Amber */
+    --color-secondary-dark: #d97706;
+    --color-secondary-light: #fbbf24;
+    
+    /* Status/severity colors */
+    --color-critical: #ef4444; /* Red */
+    --color-error: #f87171; /* Light red */
+    --color-warning: #f59e0b; /* Amber */
+    --color-info: #3b82f6; /* Blue */
+    --color-success: #10b981; /* Green */
+    
+    /* Neutral colors - light theme */
+    --color-background: #f9fafb;
+    --color-surface: #ffffff;
+    --color-surface-secondary: #f3f4f6;
+    --color-border: #e5e7eb;
+    --color-border-light: #f3f4f6;
+    --color-text-primary: #111827;
+    --color-text-secondary: #4b5563;
+    --color-text-tertiary: #6b7280;
+    --color-text-muted: #9ca3af;
+    
+    /* Syntax highlighting */
+    --color-code-background: #f1f5f9;
+    --color-code-foreground: #334155;
+    --color-comment: #64748b;
+    --color-keyword: #7c3aed;
+    --color-string: #16a34a;
+    --color-function: #0284c7;
+    --color-variable: #ea580c;
+    --color-operator: #be123c;
+    
+    /* Component specific */
+    --header-height: 4rem;
+    --sidebar-width: 18rem;
+    --content-max-width: 72rem;
+    
+    /* Animation */
+    --transition-standard: 0.2s ease-in-out;
+    
+    /* Spacing */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    
+    /* Border radius */
+    --radius-sm: 0.125rem;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 0.75rem;
+    --radius-2xl: 1rem;
+    --radius-full: 9999px;
+  }
+  
+  /* Dark theme variables */
+  .dark {
+    /* Neutral colors - dark theme */
+    --color-background: #111827;
+    --color-surface: #1f2937;
+    --color-surface-secondary: #374151;
+    --color-border: #374151;
+    --color-border-light: #1f2937;
+    --color-text-primary: #f9fafb;
+    --color-text-secondary: #e5e7eb;
+    --color-text-tertiary: #d1d5db;
+    --color-text-muted: #9ca3af;
+    
+    /* Syntax highlighting - dark theme */
+    --color-code-background: #1e293b;
+    --color-code-foreground: #e2e8f0;
+    --color-comment: #94a3b8;
+    --color-keyword: #a78bfa;
+    --color-string: #4ade80;
+    --color-function: #38bdf8;
+    --color-variable: #fb923c;
+    --color-operator: #fb7185;
+    
+    /* Shadows - dark theme */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Apply variables to commonly used classes (complementing Tailwind) */
+  
+  /* Backgrounds */
+  .app-bg {
+    background-color: var(--color-background);
+  }
+  
+  .surface {
+    background-color: var(--color-surface);
+  }
+  
+  .surface-secondary {
+    background-color: var(--color-surface-secondary);
+  }
+  
+  /* Text colors */
+  .text-app-primary {
+    color: var(--color-text-primary);
+  }
+  
+  .text-app-secondary {
+    color: var(--color-text-secondary);
+  }
+  
+  .text-app-tertiary {
+    color: var(--color-text-tertiary);
+  }
+  
+  .text-app-muted {
+    color: var(--color-text-muted);
+  }
+  
+  /* Status colors */
+  .text-critical {
+    color: var(--color-critical);
+  }
+  
+  .text-error {
+    color: var(--color-error);
+  }
+  
+  .text-warning {
+    color: var(--color-warning);
+  }
+  
+  .text-info {
+    color: var(--color-info);
+  }
+  
+  .text-success {
+    color: var(--color-success);
+  }
+  
+  .bg-critical {
+    background-color: var(--color-critical);
+  }
+  
+  .bg-error {
+    background-color: var(--color-error);
+  }
+  
+  .bg-warning {
+    background-color: var(--color-warning);
+  }
+  
+  .bg-info {
+    background-color: var(--color-info);
+  }
+  
+  .bg-success {
+    background-color: var(--color-success);
+  }
+  
+  /* Borders */
+  .border-app {
+    border-color: var(--color-border);
+  }
+  
+  .border-app-light {
+    border-color: var(--color-border-light);
+  }
+  
+  /* Transitions for theme changes */
+  .theme-transition {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+  
+  /* Code highlighting styles */
+  pre, code {
+    background-color: var(--color-code-background);
+    color: var(--color-code-foreground);
+  }
+  
+  .code-comment {
+    color: var(--color-comment);
+  }
+  
+  .code-keyword {
+    color: var(--color-keyword);
+  }
+  
+  .code-string {
+    color: var(--color-string);
+  }
+  
+  .code-function {
+    color: var(--color-function);
+  }
+  
+  .code-variable {
+    color: var(--color-variable);
+  }
+  
+  .code-operator {
+    color: var(--color-operator);
+  }
+  
+  /* Loading states */
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+  
+  .loading-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  /* Progress bar */
+  .progress-bar {
+    background-color: var(--color-primary);
+    height: 0.25rem;
+    transition: width var(--transition-standard);
+  }
+  
+  .progress-bar-background {
+    background-color: var(--color-border-light);
+    height: 0.25rem;
+  }
+  
+  /* Focus styles */
+  .focus-ring {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+  
+  /* Buttons with theme-sensitive styling */
+  .btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    transition: background-color var(--transition-standard);
+  }
+  
+  .btn-primary:hover {
+    background-color: var(--color-primary-dark);
+  }
+  
+  .btn-secondary {
+    background-color: var(--color-surface-secondary);
+    color: var(--color-text-primary);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    transition: background-color var(--transition-standard);
+  }
+  
+  .btn-secondary:hover {
+    background-color: var(--color-border);
+  }
+  
+  /* Card styles */
+  .card {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--color-border);
+  }

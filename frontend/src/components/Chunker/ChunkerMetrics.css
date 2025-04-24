@@ -1,0 +1,22 @@
+.chunker-metrics {
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .chunker-card {
+    background-color: white;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .metric-item {
+    margin: 10px 0;
+    padding: 8px;
+    background-color: #f9f9f9;
+    border-left: 3px solid #007bff;
+  }
