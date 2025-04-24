@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.5.0",
+    "eventsource": "^3.0.6",
+    "framer-motion": "^12.6.2",
+    "next-themes": "^0.4.6",
+    "pg": "^8.14.1",
+    "pg-hstore": "^2.3.4",
+    "react": "^18.3.1",
+    "react-country-flag": "^3.1.0",
+    "react-dom": "^18.3.1",
+    "react-select": "^5.10.1",
+    "react-tooltip": "^5.28.0",
+    "ruff": "^1.5.4",
+    "sequelize": "^6.37.7",
+    "sequelize-cli": "^6.6.2"
+  }
+}
