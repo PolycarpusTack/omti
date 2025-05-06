@@ -423,8 +423,22 @@ class BaseChunkingStrategy(ABC):
             )
             
             # Update total chunks in metadata
+            metadata_builder = MetadataBuilder()
+            updated_metadata = []
             for md in metadata:
-                md.total_chunks = len(chunks)
+                # Create a new metadata instance with updated total_chunks
+                updated_md = metadata_builder \
+                    .with_index(md.index) \
+                    .with_total_chunks(len(chunks)) \
+                    .with_format(md.format) \
+                    .with_token_count(md.token_count) \
+                    .with_char_count(md.char_count) \
+                    .with_overlap(md.has_overlap, md.overlap_from) \
+                    .with_content_slice(md.content_slice[0], md.content_slice[1]) \
+                    .with_preserved_context(md.preserved_context) \
+                    .build()
+                updated_metadata.append(updated_md)
+            metadata = updated_metadata
             
             # Add metadata comments if enabled
             if options.add_metadata_comments:
@@ -465,12 +479,25 @@ class BaseChunkingStrategy(ABC):
                 logger.warning(
                     f"[{self.operation_id}] Returning {len(chunks)} chunks processed before error"
                 )
+                # Create new metadata instances with updated total_chunks
+                metadata_builder = MetadataBuilder()
+                updated_metadata = []
                 for md in metadata:
-                    md.total_chunks = len(chunks)
-                    
+                    updated_md = metadata_builder \
+                        .with_index(md.index) \
+                        .with_total_chunks(len(chunks)) \
+                        .with_format(md.format) \
+                        .with_token_count(md.token_count) \
+                        .with_char_count(md.char_count) \
+                        .with_overlap(md.has_overlap, md.overlap_from) \
+                        .with_content_slice(md.content_slice[0], md.content_slice[1]) \
+                        .with_preserved_context(md.preserved_context) \
+                        .build()
+                    updated_metadata.append(updated_md)
+                
                 return ChunkingResult(
                     chunks=chunks,
-                    chunk_metadata=metadata,
+                    chunk_metadata=updated_metadata,
                     original_length=len(text),
                     detected_format=self.format_type,
                     token_estimation_strategy=options.token_strategy,

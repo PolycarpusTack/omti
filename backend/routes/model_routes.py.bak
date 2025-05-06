@@ -224,9 +224,8 @@ async def circuit_protected_fetch_models() -> List[ModelInfo]:
         model_name = model_data.get('name')
         if model_name:
             try:
-                # FIXED: Changed from GET with params to POST with JSON body
                 model_info_response = await safe_ollama_call(
-                    "post", "/api/show", json={"name": model_name}
+                    "get", "/api/show", params={"name": model_name}
                 )
                 context_size = model_info_response.get('parameters', {}).get('context_length')
                 desc = model_info_response.get('details', {}).get('description', f"Ollama model: {model_name}")

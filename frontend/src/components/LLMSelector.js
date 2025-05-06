@@ -4,7 +4,7 @@ import axios from 'axios';
 import _ from 'lodash';
 
 // Use React.lazy for the modal to reduce initial bundle size
-const ModelDetailsModal = lazy(() => import('./Modals/ModelDetailsModal'));
+const ModelDetailsModal = lazy(() => import('./Modals/ModelDetailsModal/index'));
 
 const API_URL = 'http://localhost:8000'; // Update with your actual API URL
 

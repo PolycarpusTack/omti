@@ -680,7 +680,7 @@ class SystemResourceMonitor(ResourceMonitor):
             return usage["cpu_percent"] < 95 and usage["memory_percent"] < 95
         elif request.priority == ResourcePriority.NORMAL:
             # Normal requests require reasonable resource availability
-            return usage["cpu_percent"] < 80 and usage["memory_percent"] < 85
+            return usage["cpu_percent"] < 80 and usage["memory_percent"] < 95
         elif request.priority == ResourcePriority.LOW:
             # Low priority requests need ample resources
             return usage["cpu_percent"] < 70 and usage["memory_percent"] < 75

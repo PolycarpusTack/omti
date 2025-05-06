@@ -1,0 +1,293 @@
+// src/components/Modals/ModelDetailsModal.js
+import React, { useState, useEffect } from "react";
+import ModelInfoTab from "./ModelTabs/ModelInfoTab";
+import ModelSettingsTab from "./ModelTabs/ModelSettingsTab";
+import ModelTestingTab from "./ModelTabs/ModelTestingTab";
+import ModelAnalyticsTab from "./ModelTabs/ModelAnalyticsTab";
+import ModelVersioningTab from "./ModelTabs/ModelVersioningTab";
+import ModelAccessTab from "./ModelTabs/ModelAccessTab";
+import { useModelSettings } from "../../hooks/useModelSettings";
+import { useViewMode } from "../../hooks/useViewMode";
+
+const ModelDetailsModal = ({
+  model,
+  isOpen,
+  onClose,
+  onSelectModel,
+  isSelected,
+  onUpdateSettings,
+  usageHistory = [],
+}) => {
+  // Active tab state
+  const [activeTab, setActiveTab] = useState("info");
+  
+  // Custom hooks for better state management
+  const { viewMode, toggleViewMode, renderIfExpanded } = useViewMode();
+  const { 
+    settings, 
+    originalSettings, 
+    savedVersions,
+    setSavedVersions,
+    handleSettingChange, 
+    resetToOriginal,
+    saveCurrentVersion,
+    loadVersion,
+    exportSettings,
+    importSettings
+  } = useModelSettings(model, isSelected, onUpdateSettings);
+
+  // Save settings when closing the modal
+  const handleClose = () => {
+    if (model?.id) {
+      onUpdateSettings(model.id, settings);
+    }
+    onClose();
+  };
+
+  // Early return if modal is not open
+  if (!isOpen || !model) return null;
+
+  // Process usageHistory to ensure data integrity
+  const processedUsageHistory = usageHistory.map((entry) => ({
+    date: entry.date || "Unknown Date",
+    tokens: Number(entry.tokens) || 0,
+    cost: Number(entry.cost) || 0,
+    avgResponseTime: Number(entry.avgResponseTime) || 0,
+  }));
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div
+        className={`bg-white dark:bg-gray-800 rounded-lg p-6 ${
+          viewMode === "concise" ? "max-w-2xl" : "max-w-6xl"
+        } w-full max-h-[90vh] overflow-y-auto shadow-2xl`}
+      >
+        {/* Header with tabs and view mode toggle */}
+        <div className="flex flex-col mb-6">
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center min-w-0">
+              <div
+                className={`w-3 h-3 rounded-full flex-shrink-0 ${
+                  model.status === "healthy"
+                    ? "bg-green-500"
+                    : model.status === "degraded"
+                    ? "bg-yellow-500"
+                    : "bg-red-500"
+                } mr-2`}
+              ></div>
+              <h2 className="text-xl font-bold dark:text-gray-100 truncate">
+                {model.name}
+              </h2>
+              {model.provider && (
+                <span className="ml-2 px-2 py-0.5 bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300 text-xs rounded-full flex-shrink-0">
+                  {model.provider === "openai"
+                    ? "OpenAI"
+                    : model.provider === "anthropic"
+                    ? "Anthropic"
+                    : model.provider === "cohere"
+                    ? "Cohere"
+                    : model.provider}
+                </span>
+              )}
+            </div>
+
+            {/* View mode toggle */}
+            <div className="flex items-center mr-2 sm:mr-6 flex-shrink-0">
+              <span className="text-xs mr-2 text-gray-500 dark:text-gray-400 hidden sm:inline">
+                {viewMode === "concise" ? "Concise" : "Expanded"}
+              </span>
+              <div className="relative inline-block w-10 h-5">
+                <input
+                  type="checkbox"
+                  id="view-toggle"
+                  className="opacity-0 w-0 h-0"
+                  checked={viewMode === "expanded"}
+                  onChange={toggleViewMode}
+                  aria-label={`Switch to ${
+                    viewMode === "expanded" ? "concise" : "expanded"
+                  } view`}
+                />
+                <label
+                  htmlFor="view-toggle"
+                  className={`absolute cursor-pointer top-0 left-0 right-0 bottom-0 rounded-full transition-all duration-300 ${
+                    viewMode === "expanded"
+                      ? "bg-blue-500"
+                      : "bg-gray-300 dark:bg-gray-600"
+                  }`}
+                >
+                  <span
+                    className={`absolute h-3 w-3 bg-white rounded-full transition-all duration-300 ${
+                      viewMode === "expanded" ? "left-6" : "left-1"
+                    } top-1`}
+                  ></span>
+                </label>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleClose}
+              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex-shrink-0"
+              aria-label="Close modal"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+
+          {/* Tab navigation */}
+          <div className="flex space-x-1 border-b border-gray-200 dark:border-gray-700 overflow-x-auto pb-px">
+            <button
+              type="button"
+              onClick={() => setActiveTab("info")}
+              className={`px-3 sm:px-4 py-2 text-sm font-medium whitespace-nowrap ${
+                activeTab === "info"
+                  ? "border-b-2 border-blue-500 text-blue-600 dark:text-blue-400"
+                  : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              }`}
+              aria-selected={activeTab === "info"}
+              role="tab"
+            >
+              Information
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("settings")}
+              className={`px-3 sm:px-4 py-2 text-sm font-medium whitespace-nowrap ${
+                activeTab === "settings"
+                  ? "border-b-2 border-blue-500 text-blue-600 dark:text-blue-400"
+                  : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              }`}
+              aria-selected={activeTab === "settings"}
+              role="tab"
+            >
+              Settings
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("testing")}
+              className={`px-3 sm:px-4 py-2 text-sm font-medium whitespace-nowrap ${
+                activeTab === "testing"
+                  ? "border-b-2 border-blue-500 text-blue-600 dark:text-blue-400"
+                  : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              }`}
+              aria-selected={activeTab === "testing"}
+              role="tab"
+            >
+              Testing & Tuning
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("analytics")}
+              className={`px-3 sm:px-4 py-2 text-sm font-medium whitespace-nowrap ${
+                activeTab === "analytics"
+                  ? "border-b-2 border-blue-500 text-blue-600 dark:text-blue-400"
+                  : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              }`}
+              aria-selected={activeTab === "analytics"}
+              role="tab"
+            >
+              Analytics
+            </button>
+            {renderIfExpanded(
+              <button
+                type="button"
+                onClick={() => setActiveTab("version")}
+                className={`px-3 sm:px-4 py-2 text-sm font-medium whitespace-nowrap ${
+                  activeTab === "version"
+                    ? "border-b-2 border-blue-500 text-blue-600 dark:text-blue-400"
+                    : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                }`}
+                aria-selected={activeTab === "version"}
+                role="tab"
+              >
+                Versioning
+              </button>
+            )}
+            {renderIfExpanded(
+              <button
+                type="button"
+                onClick={() => setActiveTab("access")}
+                className={`px-3 sm:px-4 py-2 text-sm font-medium whitespace-nowrap ${
+                  activeTab === "access"
+                    ? "border-b-2 border-blue-500 text-blue-600 dark:text-blue-400"
+                    : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                }`}
+                aria-selected={activeTab === "access"}
+                role="tab"
+              >
+                Access & Alerts
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Tab content with concise/expanded views */}
+        <div className="tab-content">
+          {activeTab === "info" && (
+            <ModelInfoTab 
+              model={model} 
+              viewMode={viewMode} 
+              renderIfExpanded={renderIfExpanded} 
+            />
+          )}
+
+          {activeTab === "settings" && (
+            <ModelSettingsTab 
+              settings={settings} 
+              handleSettingChange={handleSettingChange} 
+              viewMode={viewMode} 
+              renderIfExpanded={renderIfExpanded}
+              resetToOriginal={resetToOriginal}
+            />
+          )}
+
+          {activeTab === "testing" && (
+            <ModelTestingTab 
+              settings={settings} 
+              handleSettingChange={handleSettingChange} 
+              viewMode={viewMode}
+            />
+          )}
+
+          {activeTab === "analytics" && (
+            <ModelAnalyticsTab 
+              usageHistory={processedUsageHistory} 
+              viewMode={viewMode}
+            />
+          )}
+
+          {activeTab === "version" && viewMode === "expanded" && (
+            <ModelVersioningTab 
+              settings={settings}
+              savedVersions={savedVersions}
+              saveCurrentVersion={saveCurrentVersion}
+              loadVersion={loadVersion}
+              exportSettings={exportSettings}
+              importSettings={importSettings}
+              model={model}
+            />
+          )}
+
+          {activeTab === "access" && viewMode === "expanded" && (
+            <ModelAccessTab model={model} />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ModelDetailsModal;

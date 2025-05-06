@@ -1280,19 +1280,19 @@ async def analyze(
                         f"Provide a clear explanation of the issue, including a simple summary of the problem, potential root causes, "
                         f"and which parts of the system might be affected. Language: {language}\n\n{chunk}"
                     )
-                    technical_analysis = await model_service.generate_response(technical_prompt, model_settings)
+                    technical_analysis = await model_service.generate_response(prompt=technical_prompt, **model_settings)
                     
                     simplification_prompt = (
                         f"Rewrite the above analysis in very simple, everyday language so that someone with no technical knowledge can understand it. "
                         f"Language: {language}\n\n{technical_analysis}"
                     )
-                    simplified_analysis = await model_service.generate_response(simplification_prompt, model_settings)
+                    simplified_analysis = await model_service.generate_response(prompt=simplification_prompt, **model_settings)
                     
                     solutions_prompt = (
                         f"Based on the above analysis, please provide a bullet list of clear, step-by-step actionable solutions to resolve the issue. "
                         f"Each step should be explained in simple terms that a non-technical team member can follow. Language: {language}\n\n{technical_analysis}"
                     )
-                    suggested_solutions = await model_service.generate_response(solutions_prompt, model_settings)
+                    suggested_solutions = await model_service.generate_response(prompt=solutions_prompt, **model_settings)
                     
                     end_time = datetime.now()
                     processing_time = (end_time - start_time).total_seconds()

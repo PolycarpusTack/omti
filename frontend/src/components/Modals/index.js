@@ -4,6 +4,7 @@ import PatternInsightsModal from './PatternInsightsModal';
 import ShareModal from './ShareModal';
 import TroubleshootingWizard from '../../components/TroubleshootingWizard';
 import HelpModal from './HelpModal';
+import ModelDetailsModal from './ModelDetailsModal';
 
 // Export as a map for dynamic access
 export const modals = {
@@ -12,7 +13,8 @@ export const modals = {
   patternInsights: PatternInsightsModal,
   share: ShareModal,
   troubleshooting: TroubleshootingWizard,
-  help: HelpModal
+  help: HelpModal,
+  modelDetails: ModelDetailsModal
 };
 
 // Named exports for direct imports
@@ -21,5 +23,6 @@ export {
   HistoryModal,
   PatternInsightsModal,
   ShareModal,
-  HelpModal
+  HelpModal,
+  ModelDetailsModal
 };

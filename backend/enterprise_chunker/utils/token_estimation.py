@@ -130,21 +130,20 @@ class BaseTokenEstimator:
         sentences_count = len(re.findall(r'[.!?]+\s+', text)) + 1
         
         # Check for markdown features - use native format detection from RegexPatterns
-        format_patterns = RegexPatterns.get_format_patterns()  # No enum needed - default is markdown
+        from enterprise_chunker.models.enums import ContentFormat
+        format_patterns = RegexPatterns.get_format_patterns(ContentFormat.MARKDOWN)  # Use markdown format
         has_code_blocks = bool(format_patterns['code_blocks'].search(text))
         has_list_items = bool(format_patterns['list_items'].search(text))
         has_headings = bool(format_patterns['headers'].search(text))
         has_tables = bool(re.search(r'\|.*\|.*\n\|[-:]+\|', text))
         
-        return ContentFeatures(
+        features = ContentFeatures(
             length=len(text),
             word_count=word_count,
             whitespace_ratio=whitespace_ratio,
             symbol_density=symbol_density,
             has_cjk=has_cjk,
             has_emoji=has_emoji,
-            has_arabic=has_arabic,
-            has_hebrew=has_hebrew,
             avg_word_length=avg_word_length,
             sentences_count=sentences_count,
             has_code_blocks=has_code_blocks,
@@ -152,6 +151,12 @@ class BaseTokenEstimator:
             has_tables=has_tables,
             has_headings=has_headings
         )
+        
+        # Store Arabic/Hebrew detection as attributes even though they're not in the dataclass
+        setattr(features, 'has_arabic', has_arabic)
+        setattr(features, 'has_hebrew', has_hebrew)
+        
+        return features
     
     def _calculate_estimate(self, features: ContentFeatures, text: str) -> int:
         """

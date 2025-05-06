@@ -1,0 +1,13 @@
+This is a test file for the EnterpriseChunker.
+
+Let's test with some JSON content:
+{
+    "name": "test",
+    "value": 123,
+    "nested": {
+        "array": [1, 2, 3, 4, 5]
+    }
+}
+
+And some regular text.
+Let's see how the chunker handles this with both JSON and semantic chunking.

@@ -699,7 +699,7 @@ const AnalysisResultsComponent = ({
           </div>
         )}
 
-        <style jsx>{`
+        <style jsx="true">{`
           .analysis-results-container {
             height: 100%;
             min-height: 400px;

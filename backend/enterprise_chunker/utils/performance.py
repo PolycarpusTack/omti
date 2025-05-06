@@ -491,17 +491,44 @@ class PerformanceMonitor:
         self.metrics.total_content_size += content_size
 
 
-def timing_decorator(log_level: str = 'debug', logger_name: Optional[str] = None):
+def timing_decorator(func=None, log_level='debug', logger_name=None):
     """
     Simple decorator for timing function execution
     
     Args:
+        func: The function to decorate (used when decorator is called without arguments)
         log_level: Logging level to use ('debug', 'info', 'warning', 'error')
         logger_name: Name of logger to use (defaults to module logger)
     
     Returns:
         Decorated function
     """
+    # Handle the case when decorator is called without arguments
+    if func is not None:
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            # Set up logging
+            log = logger
+                
+            # Get logging function based on level
+            log_fn = getattr(log, log_level.lower())
+            
+            # Start timing
+            start_time = time.time()
+            
+            # Execute function
+            result = func(*args, **kwargs)
+            
+            # Calculate duration
+            duration = time.time() - start_time
+            
+            # Log the timing
+            log_fn(f"{func.__name__} executed in {duration:.4f} seconds")
+            
+            return result
+        return wrapper
+    
+    # Regular case - decorator called with arguments
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -1136,7 +1163,7 @@ class PerformanceOptimizer:
             overlap_tokens=self.base_options.overlap_tokens,
             chunking_strategy=strategy,
             overlap_enforcement=self.base_options.overlap_enforcement,
-            stream_buffer_size=self.base_options
+            stream_buffer_size=self.base_options.stream_buffer_size
         )
         return options
     
